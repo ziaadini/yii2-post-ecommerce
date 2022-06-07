@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://ecommerce.post.ir/" target="_blank" rel="external">
-        <img src="https://github.com/Sadi01/yii2-post-ecommerce/src/img/post.png" height="80px">
+        <img src="https://raw.githubusercontent.com/Sadi01/yii2-post-ecommerce/master/src/img/post.png" height="80px">
     </a>
     <h1 align="center">Electronic Commerce Service of National Iranian Post Company for Yii 2</h1>
     <br>
