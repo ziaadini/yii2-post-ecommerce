@@ -28,7 +28,7 @@
     "ext-json": "*"
   },
   "autoload": {
-    "psr-4": { "sadi01\\postecommerce\\src\\": "" }
+    "psr-4": { "sadi01\\postecommerce\\": "src" }
   },
   "config": {
     "process-timeout": 1800,
