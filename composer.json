@@ -1,0 +1,48 @@
+{
+  "name": "sadi01/yii2-post-ecommerce",
+  "description": "Electronic Commerce Service of National Iranian Post Company For Yii2 Framework",
+  "keywords": [
+    "yii2",
+    "framework",
+    "Post Ecommerce Service"
+  ],
+  "homepage": "https://github.com/Sadi01/yii2-post-ecommerce",
+  "type": "yii2-extension",
+  "license": "BSD-3-Clause",
+  "support": {
+    "issues": "https://github.com/Sadi01/yii2-post-ecommerce/issues?state=open",
+    "source": "https://github.com/Sadi01/yii2-post-ecommerce"
+  },
+  "authors": [
+    {
+      "name": "Sadegh Shafii",
+      "email": "sadshafiei.01@gmail.com",
+      "homepage": "https://github.com/Sadi01"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "yiisoft/yii2": "~2.0.14",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": { "sadi01\\postecommerce\\src": "" }
+  },
+  "config": {
+    "process-timeout": 1800,
+    "fxp-asset": {
+      "enabled": false
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "extra": {
+    "bootstrap": "sadi01\\postecommerce\\Bootstrap"
+  }
+}
