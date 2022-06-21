@@ -339,7 +339,14 @@ class PostService extends Component
             ];
         }
 
-        return $this->execute($path, $data);
+        $response = $this->execute($path, $data);
+
+        foreach ($response['body'] as $result) {
+            $result->ResultCode = $result->Result;
+            $result->Result = Packet::itemAlias('Result', $result->Result);
+        }
+
+        return $response;
     }
 
     /**
@@ -358,6 +365,7 @@ class PostService extends Component
         $response = $this->execute($path, $data);
 
         foreach ($response['body'] as $result) {
+            $result->ResultCode = $result->Result;
             $result->Result = Packet::itemAlias('Result', $result->Result);
         }
 
@@ -377,55 +385,15 @@ class PostService extends Component
             ];
         }
 
-        return $this->execute($path, $data);
+        $response = $this->execute($path, $data);
+
+        foreach ($response['body'] as $result) {
+            $result->ResultCode = $result->Result;
+            $result->Result = Packet::itemAlias('Result', $result->Result);
+        }
+
+        return $response;
     }
-
-    /**
-     * @param Packing $pack
-     * @return array|mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getBarcode(Packing $pack)
-    {
-        $path = $this->get_path();
-        $dispatch = $pack->ownerModel instanceof Dispatch ? $pack->ownerModel : $pack->ownerModel->backRequest->dispatch;
-
-        $data = [
-            'typecode' => 11,
-            'parceltype' => "VANGUARD_BOX", // 2
-            'sourcecode' => $dispatch->warehouseParent->destination->city->post_code,
-            'destcode' => $pack->deliverInfo['city']->post_code,
-            'sendername' => SettingsAccount::get('POST_SERVICE_SENDER_TITLE'),
-            'senderpostalcode' => SettingsAccount::get('POST_SERVICE_SENDER_POSTAL_CODE'),
-            'receivername' => $pack->deliverInfo['deliveryName'],
-            'receiverpostalcode' => $pack->deliverInfo['zipcode'],
-            'weight' => $pack->weight ?: 200,
-            'postalcostcategoryid' => "NO_STAMP",
-            'postalcosttypeflag' => "CASH_M2",
-            'relationalkey' => $pack->id,
-            'senderid' => SettingsAccount::get('POST_SERVICE_SENDER_NATIONAL_CODE'),
-            'receiverid' => $dispatch->order->user->nationalCode ?: null,
-            'sendermobile' => SettingsAccount::get('POST_SERVICE_SENDER_MOBILE'),
-            'receivermobile' => $pack->deliverInfo['deliveryMobile'],
-            'senderaddress' => SettingsAccount::get('POST_SERVICE_SENDER_ADDRESS'),
-            'receiveraddress' => $pack->deliverInfo['fullAddress'],
-            'insurancetype' => "REGULAR",
-            'insuranceamount' => 8000,
-            'spsreceivertimetype' => "REGULAR",
-            'spsparcletype' => "REGULAR",
-            'tlsservicetype' => "WORKING_HOURS",
-            'tworeceiptant' => false,
-            'electroreceiptant' => true,
-            'iscot' => false,
-            'smsservice' => false,
-            'isnonstandard' => false,
-            'sendplacetype' => "OTHER_CITIES",
-            'Contractorportion' => 0,
-        ];
-
-        return $this->execute($path, $data);
-    }
-
 }
 
 ?>
