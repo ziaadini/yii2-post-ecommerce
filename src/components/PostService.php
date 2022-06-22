@@ -78,7 +78,9 @@ class PostService extends Component
                 ->send();
 
             if (!$response->isOk) {
-                Yii::error(($message = Yii::t('postService', json_decode($response->content)->Message)), 'PostService-Exception-Details');
+                $responseContent = json_decode($response->content);
+                Yii::error(($message = Yii::t('postService', ($responseContent ? $responseContent->Message : ''))), 'PostService-Exception-Details');
+                Yii::error($response->content, 'PostService-Exception-Content');
                 return [
                     'status' => $response->getStatusCode(),
                     'body' => $message,
