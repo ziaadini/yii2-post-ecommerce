@@ -79,16 +79,14 @@ class PostService extends Component
 
             if (!$response->isOk) {
                 $responseContent = json_decode($response->content);
-                Yii::error(($message = Yii::t('postService', ($responseContent ? $responseContent->Message : ''))), 'PostService-Exception-Details');
-                Yii::error($response, 'PostService-Exception-Content');
+                Yii::error(($message = Yii::t('postService', ($responseContent ? $responseContent->Message : ''))) . PHP_EOL . VarDumper::dumpAsString($response), 'PostService-Exception-Details');
                 return [
                     'status' => $response->getStatusCode(),
                     'body' => $message,
                 ];
             }
         } catch (\Exception $e) {
-            Yii::error($e->getMessage(), 'PostService-Exception');
-            Yii::error($e->getTraceAsString(), 'PostService-Exception-Details');
+            Yii::error($e->getMessage() . PHP_EOL . $e->getTraceAsString(), 'PostService-Exception');
             return [
                 'status' => $e->getCode(),
                 'error' => $e->getMessage(),
