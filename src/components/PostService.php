@@ -7,6 +7,7 @@ use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\httpclient\Client;
+use yii\helpers\VarDumper;
 
 /**@property Client $client */
 class PostService extends Component
