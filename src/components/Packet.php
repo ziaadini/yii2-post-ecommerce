@@ -35,6 +35,7 @@ class Packet extends Component
     public $customer_postal_code;
     public $customer_address;
     public $content;
+    public $parcel_category_id;
 
     public static function itemAlias($type, $code = NULL)
     {
