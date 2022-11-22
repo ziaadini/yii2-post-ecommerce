@@ -81,7 +81,7 @@ class PostServiceRest extends Component
                     'client_id' => $this->oauthClient->client_id,
                     'user_id' => $this->oauth_user,
                     'expires' => date("Y-m-d H:i:s", (time() + $result->expires_in)),
-                    'scope' => $scopes,
+                    'scope' => json_encode($scopes),
                     'normal_token_attempt' => 0
                 ]);
                 $accessToken->save();
