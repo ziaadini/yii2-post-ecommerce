@@ -4,6 +4,7 @@ namespace sadi01\postecommerce\components;
 
 use common\models\OauthAccessTokens;
 use common\models\OauthClients;
+use common\models\SettingsAccount;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -14,9 +15,11 @@ use yii\httpclient\Client;
 /**@property Client $client */
 class PostServiceRest extends Component
 {
-    public $oauthClient;
+    public $oauth_client;
+    public $oauth_user;
     public $debug = false;
     public $baseUrl = 'https://ecommrestapi.post.ir';
+    private $oauthClient;
     private $version = 'api/v1';
     private $client;
 
@@ -27,7 +30,13 @@ class PostServiceRest extends Component
      */
     public function init()
     {
-        $this->oauthClient = OauthClients::findOne('MOBIT');
+        if (!$this->oauth_client || !($this->oauthClient = OauthClients::findOne($this->oauth_client))) {
+            throw new InvalidConfigException('OAuth2 client ID is required!');
+        }
+
+        if (!$this->oauth_user && !($this->oauth_user = Yii::$app->user->id)) {
+            throw new InvalidConfigException('OAuth2 User ID is required!');
+        }
 
         $this->client = $client = new Client(['transport' => 'yii\httpclient\CurlTransport']);
     }
@@ -47,10 +56,10 @@ class PostServiceRest extends Component
      * @return null|string
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getToken($user_id, $scopes = [], $grant_type = "password", $code = null, $redirect_uri = null)
+    public function getToken($scopes = [], $grant_type = "password", $code = null, $redirect_uri = null)
     {
         $scopes = is_array($scopes) ? implode(",", $scopes) : $scopes;
-        $accessToken = OauthAccessTokens::find()->notExpire()->byUser($user_id)->byClientId($this->oauthClient->client_id)->byScope($scopes)->one();
+        $accessToken = OauthAccessTokens::find()->notExpire()->byUser($this->oauth_user)->byClientId($this->oauthClient->client_id)->byScope($scopes)->one();
 
         if (!$accessToken instanceof OauthAccessTokens) {
             $path = $this->get_path("Token", 'Users');
@@ -70,7 +79,7 @@ class PostServiceRest extends Component
                 $accessToken = new OauthAccessTokens([
                     'access_token' => $result->access_token,
                     'client_id' => $this->oauthClient->client_id,
-                    'user_id' => $user_id,
+                    'user_id' => $this->oauth_user,
                     'expires' => date("Y-m-d H:i:s", (time() + $result->expires_in)),
                     'scope' => $scopes,
                     'normal_token_attempt' => 0
@@ -145,7 +154,7 @@ class PostServiceRest extends Component
     {
         $path = $this->get_path('Provinces', 'BaseInfo');
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, headers: $headers, verb: 'GET');
     }
@@ -162,7 +171,7 @@ class PostServiceRest extends Component
 
         $path = $this->get_path('City', 'BaseInfo', $params);
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, headers: $headers, verb: 'GET');
     }
@@ -183,7 +192,7 @@ class PostServiceRest extends Component
             'PageSize' => 20
         ];
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, data: $data, headers: $headers);
     }
@@ -198,7 +207,7 @@ class PostServiceRest extends Component
         $params = ['shopID' => $shop_id];
         $path = $this->get_path('Info', 'Shop', $params);
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, headers: $headers, verb: 'GET');
     }
@@ -277,7 +286,7 @@ class PostServiceRest extends Component
         ];
         $path = $this->get_path('Price', 'Parcel');
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, data: $data, headers: $headers);
     }
@@ -299,7 +308,7 @@ class PostServiceRest extends Component
 
         $path = $this->get_path('List', 'Parcel', $params);
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, data: $data, headers: $headers);
     }
@@ -316,7 +325,7 @@ class PostServiceRest extends Component
 
         $path = $this->get_path('Track', 'Parcel', $params);
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, headers: $headers, verb: "GET");
     }
@@ -334,7 +343,7 @@ class PostServiceRest extends Component
 
         $path = $this->get_path('Status', 'Parcel');
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, data: $data, headers: $headers);
     }
@@ -370,7 +379,7 @@ class PostServiceRest extends Component
             'ParcelCategoryID' => $packet->parcel_category_id
         ];
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         return $this->execute(url: $path, data: $data, headers: $headers);
     }
@@ -405,7 +414,7 @@ class PostServiceRest extends Component
     public function deletePackets($barcodes)
     {
         $path = $this->get_path('Delete', 'Parcel');
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
         $response = $this->execute(url: $path, data: $barcodes, headers: $headers);
 
         foreach ($response['body']?->Data ?? [] as $result) {
@@ -424,7 +433,7 @@ class PostServiceRest extends Component
     {
         $path = $this->get_path('ReadyToCollect', 'Parcel');
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         $response = $this->execute(url: $path, data: $barcodes, headers: $headers);
 
@@ -440,11 +449,11 @@ class PostServiceRest extends Component
      * @return array|mixed
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function setsuspendPackets($barcodes)
+    public function setSuspendPackets($barcodes)
     {
         $path = $this->get_path('Suspend', 'Parcel');
 
-        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken(15031));
+        $headers["Authorization"] = sprintf("Bearer %s", $this->getToken($this->oauth_user));
 
         $response = $this->execute(url: $path, data: $barcodes, headers: $headers);
 

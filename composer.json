@@ -24,6 +24,8 @@
   "prefer-stable": true,
   "require": {
     "yiisoft/yii2": "~2.0.14",
+    "filsh/yii2-oauth2-server": "^2.0",
+    "yiisoft/yii2-httpclient": "~2.0.0",
     "ext-curl": "*",
     "ext-json": "*"
   },
