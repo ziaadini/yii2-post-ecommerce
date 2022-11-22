@@ -39,6 +39,21 @@ return [
 ];
 ```
 
+To use this extension by Rest Api version, you have to configure the PostService class in your application configuration as below:
+
+```php
+return [
+    //....
+    'components' => [
+        'PostEcommerce' => [
+            'class' => 'sadi01\postecommerce\components\PostServiceRest',
+            'oauth_client' => 'Your oauth2 client ID',
+            'oauth_user' => 123 // User ID
+        ],
+    ]
+];
+```
+
 How To Use
 -------------
 
