@@ -126,7 +126,7 @@ class PostServiceRest extends Component
 
             if (!$response->isOk) {
                 $responseContent = json_decode($response->content);
-                Yii::error(($message = Yii::t('postServiceRest', ($responseContent ? ($responseContent->ResMsg ?? ($responseContent->Message ?? '')) : ''))) . PHP_EOL . VarDumper::dumpAsString($response), 'PostServiceRest-Exception-Details');
+                Yii::error(($message = Yii::t('postService', ($responseContent ? ($responseContent->ResMsg ?? ($responseContent->Message ?? '')) : ''))) . PHP_EOL . VarDumper::dumpAsString($response), 'PostServiceRest-Exception-Details');
                 return [
                     'status' => $response->getStatusCode(),
                     'body' => $message,

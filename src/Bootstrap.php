@@ -25,16 +25,5 @@ class Bootstrap implements BootstrapInterface
                 ],
             ];
         }
-
-        if (!isset($app->get('i18n')->translations['postServiceRest*'])) {
-            $app->get('i18n')->translations['postServiceRest*'] = [
-                'class' => PhpMessageSource::className(),
-                'basePath' => __DIR__ . '/messages',
-                'sourceLanguage' => 'en-US',
-                'fileMap' => [
-                    'postServiceRest' => 'main.php',
-                ],
-            ];
-        }
     }
 }
