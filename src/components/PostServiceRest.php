@@ -25,6 +25,8 @@ class PostServiceRest extends Component
 
     const API_PATH = "%s://%s/%s/%s/%s%s";
 
+    const MAX_PARCEL_VALUE = 200000000; // 200 Million Rial
+
     /**
      * @throws InvalidConfigException
      */
@@ -126,7 +128,19 @@ class PostServiceRest extends Component
 
             if (!$response->isOk) {
                 $responseContent = json_decode($response->content);
-                Yii::error(($message = Yii::t('postService', ($responseContent ? ($responseContent->ResMsg ?? ($responseContent->Message ?? '')) : ''))) . PHP_EOL . VarDumper::dumpAsString($response), 'PostServiceRest-Exception-Details');
+                Yii::error((
+                    $message = Yii::t('postService',
+                        (
+                        $responseContent ?
+                            (
+                            $responseContent->ResMsg ?
+                                ($responseContent->ResMsg . ' ' . ($responseContent->Data[0] ?? ''))
+                                : ($responseContent->Message ?? '')
+                            )
+                            : ''
+                        )
+                    )
+                    ) . PHP_EOL . VarDumper::dumpAsString($response), 'PostServiceRest-Exception-Details');
                 return [
                     'status' => $response->getStatusCode(),
                     'body' => $message,
@@ -361,7 +375,7 @@ class PostServiceRest extends Component
                 'Weight' => $packet->price->weight,
                 'ServiceTypeID' => $packet->price->service_type,
                 'ToCityID' => $packet->price->destination_city_id,
-                'ParcelValue' => $packet->price->value,
+                'ParcelValue' => min($packet->price->value, self::MAX_PARCEL_VALUE),
                 'PayTypeID' => $packet->price->payment_type,
                 'NonStandardPackage' => $packet->price->non_standard_package,
                 'SMSService' => $packet->price->sms_service,
