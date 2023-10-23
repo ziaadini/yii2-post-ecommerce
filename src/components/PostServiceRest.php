@@ -117,7 +117,9 @@ class PostServiceRest extends Component
         try {
             $response = $this->client->createRequest()
                 ->setOptions([
-                    CURLOPT_SSL_CIPHER_LIST => "DEFAULT:!DH"
+                    CURLOPT_SSL_CIPHER_LIST => "DEFAULT:!DH",
+                    CURLOPT_SSL_VERIFYPEER => false,
+                    CURLOPT_SSL_VERIFYHOST => false
                 ])
                 ->setFormat($format)
                 ->addHeaders($headers)
