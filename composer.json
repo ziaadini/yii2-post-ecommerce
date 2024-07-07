@@ -1,23 +1,28 @@
 {
-  "name": "sadi01/yii2-post-ecommerce",
+  "name": "ziaadini/yii2-post-ecommerce",
   "description": "Electronic Commerce Service of National Iranian Post Company For Yii2 Framework",
   "keywords": [
     "yii2",
     "framework",
     "Post Ecommerce Service"
   ],
-  "homepage": "https://github.com/Sadi01/yii2-post-ecommerce",
+  "homepage": "https://github.com/ziaadini/yii2-post-ecommerce",
   "type": "yii2-extension",
   "license": "BSD-3-Clause",
   "support": {
-    "issues": "https://github.com/Sadi01/yii2-post-ecommerce/issues?state=open",
-    "source": "https://github.com/Sadi01/yii2-post-ecommerce"
+    "issues": "https://github.com/ziaadini/yii2-post-ecommerce/issues?state=open",
+    "source": "https://github.com/ziaadini/yii2-post-ecommerce"
   },
   "authors": [
     {
       "name": "Sadegh Shafii",
       "email": "sadshafiei.01@gmail.com",
       "homepage": "https://github.com/Sadi01"
+    },
+    {
+      "name": "Yadollah Ziaadini",
+      "email": "y.ziaadini@gmail.com",
+      "homepage": "https://github.com/ziaadini"
     }
   ],
   "minimum-stability": "dev",
@@ -30,7 +35,7 @@
     "ext-json": "*"
   },
   "autoload": {
-    "psr-4": { "sadi01\\postecommerce\\": "src" }
+    "psr-4": { "ziaadini\\postecommerce\\": "src" }
   },
   "config": {
     "process-timeout": 1800,
